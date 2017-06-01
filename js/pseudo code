@@ -1,0 +1,5 @@
+On mouse down, will check if pointer targets any of our draggable elements.
+
+If yes, "bind" that element to our pointer. Track the position of the mouse and update the element with the pointer's coordinates.
+
+On release, stop tracking 
