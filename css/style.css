@@ -1,5 +1,6 @@
 .draggable {
-	position: absolute;
+	top: unset;
+	left: unset;	
 	z-index: 1;
 	cursor: move;
 	width: 250px;
@@ -10,30 +11,32 @@
 }
 
 .dragged {
+	position: absolute;
 	z-index: 2;
 }
 
+.holster {
+	height: 40px;
+}
+
+.in-list {
+	margin: 52px auto 0 auto;
+	transform: translateY(-50%);
+}
+
 .object1 {
-	top: 500px;
-	left: 100px;
 
 }
 
 .object2 {
-	top: 300px;
-	left: 800px;
 	background-color: blue;
 }
 
 .object3 {
-	top: 400px;
-	left: 600px;
 	background-color: orange;
 }
 
 .object4 {
-	top: 500px;
-	left: 600px;
 	background-color: orange;
 }
 
@@ -43,7 +46,7 @@
 	font-family: 'Georgia', serif;
 }
 
-#snap-to-me {
+.snap-to-me {
 	width: 300px;
 	height: 100px;
 	margin: 0 auto;
