@@ -51,9 +51,25 @@ document.addEventListener('DOMContentLoaded', function() {
 	// run on mouseup
 	function endDrag(event) {
 		// put box back to original z index
-		event.target.classList.remove('dragged');
+		var selection = event.target;
+		selection.classList.remove('dragged');
 		// mouse is up so we should no longer allow movement
 		moving = false;
+		// check if coordinates are within range 
+		if (xCord > 482 && xCord < 1036 && yCord <= 194 && yCord >= 62) {
+			// get position of snap to me element
+			var snapTo = document.getElementById('snap-to-me');
+			var snapBox = snapTo.getBoundingClientRect();
+			// selection is within coordinate thresholds, move it into the center of snap-to box
+			var selectionX = (snapBox.left + snapBox.right) / 2 - 126;
+			var selectionY = (snapBox.top + snapBox.bottom) / 2 - 17;
+			// create our styles to be added to selection
+			var pos = 'top: ' + selectionY + 'px; left: ' + selectionX + 'px;';
+			// add styles to selection
+			selection.setAttribute('style', pos);
+		}
 	}
+
+
 
 });
