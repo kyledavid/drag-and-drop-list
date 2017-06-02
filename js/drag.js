@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var yCord = 0; // current cursor y position
 	var moving = false; // enables/disables box movement
 	var draggables = document.querySelectorAll('.draggable'); // get all our draggable items
-	var listSlots = [[1],[2],[3],[4]];
-	var spotsToSnap = document.querySelectorAll('.snap-to-me');
+	var spotsToSnap = document.querySelectorAll('.snap-to-me'); // get all the list spots
 
 	draggables.forEach(function(box) {	
 		// initiate drag function when draggable item is clicked
@@ -108,11 +107,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function putItemBack(block) {
+		// query all holsters
 		var spots = document.querySelectorAll('.holster');
-
+		// cycle over holsters to find empty one
 		for (var i = 0; i < spots.length; i++) {
 			var element = spots[i];
-			// stop the loop if we find an empty holster
+			// if it already belongs to a holster just let it be
+			if (block.parentNode === element) {break;}
+			// stop the loop if we find an empty holster and place block within empty element
 			if (!element.hasChildNodes()) {
 				element.appendChild(block);
 				break;
