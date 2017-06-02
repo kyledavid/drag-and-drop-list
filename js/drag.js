@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		// mouse is up so we should no longer allow movement
 		moving = false;
 		xCord = event.clientX;
+		yCord = event.clientY;
 		// check if coordinates are within range 
 		if (xCord >= 482 && xCord <= 1036 && yCord >= 62 && yCord <= 181) {
 			// unset positioning
@@ -80,6 +81,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		else {
 			// unset positioning
 			selection.setAttribute('style', 'top: unset; left: unset;');	
+			// put item back
+			putItemBack(selection);
 		}
 	}
 
@@ -104,6 +107,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		block.setAttribute('style', pos);
 	}
 
+	function putItemBack(block) {
+		var spots = document.querySelectorAll('.holster');
 
+		for (var i = 0; i < spots.length; i++) {
+			var element = spots[i];
+			// stop the loop if we find an empty holster
+			if (!element.hasChildNodes()) {
+				element.appendChild(block);
+				break;
+			}
+		}
+	}
 
 });
