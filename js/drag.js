@@ -96,10 +96,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	function addItemForRendering(listItem, index) {
 		if (listItemsArray[index]) {
 			listItemsArray.splice(index, 0, listItem);
+			trimEmptyFromIndex(index);
 			trimItemsArray();
 		} else {
 			listItemsArray[index] = listItem;
 		}
+	}
+
+	function trimEmptyFromIndex(index) {
+		for(index; index < listItemsArray.length; index++) {
+			if(!listItemsArray[index]) {
+				console.log('i ran');
+				listItemsArray.splice(index, 1);
+				break;
+			}
+		}
+		console.log(listItemsArray);
 	}
 
 	function checkWherePositionedOnList(listItem) {
