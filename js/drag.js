@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	});
 
-
 	function initDrag(mouseEvent) {
 
 		var listItem = mouseEvent.target; 
@@ -41,36 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		permitMovement = false;
 		trackUserMousePosition(mouseUp);
 		checkWherePositionedOnList(listItem);
-	}
-
-	function putItemBack(listItem) {
-
-		var unorderedSpots = document.querySelectorAll('.holster');
-
-		for (var i = 0; i < unorderedSpots.length; i++) {
-			var currentSpot = unorderedSpots[i];
-
-			if (listItem.parentNode === currentSpot) {break;}
-
-			if (!currentSpot.hasChildNodes()) {
-				currentSpot.appendChild(listItem);
-				break;
-			}
-		}
-	}
-
-	function positionItemOnCursor(mouseEvent, listItem) {
-
-		var xOffset = listItem.offsetWidth / 2;
-		var yOffset = listItem.offsetHeight / 2;
-
-		trackUserMousePosition(mouseEvent);
-
-		if (window.scrollY) {yOffset -= window.scrollY;}
-
-		var pos = 'top: ' + (userY - yOffset) + "px; left: " + (userX - xOffset) + "px;";
-
-		listItem.setAttribute('style', pos);
 	}
 
 	function checkWherePositionedOnList(listItem) {
@@ -106,6 +75,36 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 
+	function putItemBack(listItem) {
+
+		var unorderedSpots = document.querySelectorAll('.holster');
+
+		for (var i = 0; i < unorderedSpots.length; i++) {
+			var currentSpot = unorderedSpots[i];
+
+			if (listItem.parentNode === currentSpot) {break;}
+
+			if (!currentSpot.hasChildNodes()) {
+				currentSpot.appendChild(listItem);
+				break;
+			}
+		}
+	}
+
+	function positionItemOnCursor(mouseEvent, listItem) {
+
+		var offsetX = listItem.offsetWidth / 2;
+		var offsetY = listItem.offsetHeight / 2;
+
+		trackUserMousePosition(mouseEvent);
+
+		if (window.scrollY) {offsetY -= window.scrollY;}
+
+		var positionStyles = 'top: ' + (userY - offsetY) + "px; left: " + (userX - offsetX) + "px;";
+
+		listItem.setAttribute('style', positionStyles);
+	}
+
 	function addMovementListener(listItem) {
 
 		listItem.addEventListener( 'mousemove', function(moveEvent) {
@@ -125,7 +124,4 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById('x-coord').textContent = userX + 'px';
 		document.getElementById('y-coord').textContent = (userY + window.scrollY) + 'px';
 	}
-
-	
-
 });
