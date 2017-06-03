@@ -7,6 +7,27 @@ document.addEventListener('DOMContentLoaded', function() {
 	var permitMovement = false; 
 	var listItems = document.querySelectorAll('.list-item'); 
 	var listSpots = document.querySelectorAll('.list-spot'); 
+	// the dimensional boundaries of our list
+	var lSDims = {
+			first: {
+				top: 62,
+				bottom: 181,
+				left: 482,
+				right: 1036,
+			}, 
+			second: {
+				top: 182,
+				bottom: 282,
+			}, 
+			third: {
+				top: 283,
+				bottom: 383,
+			},
+			fourth: {
+				top: 384,
+				bottom: 505,
+			},
+	}
 
 	listItems.forEach(function(listItem) {	
 
@@ -46,24 +67,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		var pageY = (userY + window.scrollY);
 
-		if (userX >= 482 && userX <= 1036 && pageY >= 62 && pageY <= 181) {
+		if (userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.first.top && pageY <= lSDims.first.bottom) {
 
 			listItem.classList.add('in-list');
 			listSpots[0].appendChild(listItem);
 
-		} else if(userX > 482 && userX < 1036 && pageY >= 182 && pageY <= 282){
+		} else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.second.top && pageY <= lSDims.second.bottom) {
 
 			listItem.classList.add('in-list');
 			listSpots[1].appendChild(listItem);
 
 		}
-		else if(userX >= 482 && userX <= 1036 && pageY >= 283 && pageY <= 383){
+		else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.third.top && pageY <= lSDims.third.bottom) {
 
 			listItem.classList.add('in-list');
 			listSpots[2].appendChild(listItem);
 
 		}
-		else if(userX >= 482 && userX <= 1036 && pageY >= 384 && pageY <= 505){
+		else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.fourth.top && pageY <= lSDims.fourth.bottom) {
 
 			listItem.classList.add('in-list');
 			listSpots[3].appendChild(listItem);
