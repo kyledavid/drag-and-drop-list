@@ -26,21 +26,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		listItem.classList.remove('in-list');
 
 		positionItemOnCursor(mouseEvent, listItem);
+		displayMouseCoordinates();
 
-		listItem.addEventListener('mousemove', function(moveEvent) {
-
-			if (permitMovement) {
-				positionItemOnCursor(moveEvent, listItem);
-			}
-
-		});
+		addMovementListener(listItem);		
 	}
-
-	function trackUserMousePosition(mouseEvent) {
-		userX = mouseEvent.clientX;
-		userY = mouseEvent.clientY;
-	}
-
 
 	function endDrag(mouseUp) {
 
@@ -54,72 +43,89 @@ document.addEventListener('DOMContentLoaded', function() {
 		checkWherePositionedOnList(listItem);
 	}
 
+	function putItemBack(listItem) {
+
+		var unorderedSpots = document.querySelectorAll('.holster');
+
+		for (var i = 0; i < unorderedSpots.length; i++) {
+			var currentSpot = unorderedSpots[i];
+
+			if (listItem.parentNode === currentSpot) {break;}
+
+			if (!currentSpot.hasChildNodes()) {
+				currentSpot.appendChild(listItem);
+				break;
+			}
+		}
+	}
+
+	function positionItemOnCursor(mouseEvent, listItem) {
+
+		var xOffset = listItem.offsetWidth / 2;
+		var yOffset = listItem.offsetHeight / 2;
+
+		trackUserMousePosition(mouseEvent);
+
+		if (window.scrollY) {yOffset -= window.scrollY;}
+
+		var pos = 'top: ' + (userY - yOffset) + "px; left: " + (userX - xOffset) + "px;";
+
+		listItem.setAttribute('style', pos);
+	}
+
 	function checkWherePositionedOnList(listItem) {
-		
-		if (userX >= 482 && userX <= 1036 && userY >= 62 && userY <= 181) {
+
+		var pageY = (userY + window.scrollY);
+
+		if (userX >= 482 && userX <= 1036 && pageY >= 62 && pageY <= 181) {
 
 			listItem.classList.add('in-list');
 			listSpots[0].appendChild(listItem);
 
-		} else if(userX > 482 && userX < 1036 && userY >= 182 && userY <= 282){
+		} else if(userX > 482 && userX < 1036 && pageY >= 182 && pageY <= 282){
 
 			listItem.classList.add('in-list');
 			listSpots[1].appendChild(listItem);
 
 		}
-		else if(userX >= 482 && userX <= 1036 && userY >= 283 && userY <= 383){
+		else if(userX >= 482 && userX <= 1036 && pageY >= 283 && pageY <= 383){
 
 			listItem.classList.add('in-list');
 			listSpots[2].appendChild(listItem);
 
 		}
-		else if(userX >= 482 && userX <= 1036 && userY >= 384 && userY <= 505){
+		else if(userX >= 482 && userX <= 1036 && pageY >= 384 && pageY <= 505){
 
 			listItem.classList.add('in-list');
 			listSpots[3].appendChild(listItem);
 
 		}
 		else {
-			
+
 			putItemBack(listItem);
 		}
 	}
 
-	function positionItemOnCursor(event, block) {
-		// account for the dimensions of our box, divied them by 2 so box will be centered on cursor
-		var xOffset = block.offsetWidth / 2;
-		var yOffset = block.offsetHeight / 2;
-		// get the position of the cursor relative to the viewport
-		userX = event.clientX;
-		userY = event.clientY;
-		// if scrolled, add the vertical scroll to the y coordinate to allow absolute positioning to work correctly
-		if (window.scrollY) {userY += window.scrollY;}
-		// display our coordinates for testing
-		document.getElementById('x-coord').textContent = userX + 'px';
-		document.getElementById('y-coord').textContent = userY + 'px';
-		// subtract offsets from cursor to center box over cursor
-		userY = userY - yOffset;
-		userX = userX - xOffset;
-		// create inline styles for positioning box
-		var pos = 'top: ' + userY + "px; left: " + userX + "px;";
-		// set inline styles for box
-		block.setAttribute('style', pos);
+	function addMovementListener(listItem) {
+
+		listItem.addEventListener( 'mousemove', function(moveEvent) {
+			if (permitMovement) {
+				displayMouseCoordinates();
+				positionItemOnCursor(moveEvent, listItem);
+			}
+		} );
 	}
 
-	function putItemBack(block) {
-		// query all holsters
-		var spots = document.querySelectorAll('.holster');
-		// cycle over holsters to find empty one
-		for (var i = 0; i < spots.length; i++) {
-			var element = spots[i];
-			// if it already belongs to a holster just let it be
-			if (block.parentNode === element) {break;}
-			// stop the loop if we find an empty holster and place block within empty element
-			if (!element.hasChildNodes()) {
-				element.appendChild(block);
-				break;
-			}
-		}
+	function trackUserMousePosition(mouseEvent) {
+		userX = mouseEvent.clientX;
+		userY = mouseEvent.clientY;
 	}
+
+	function displayMouseCoordinates() {
+		document.getElementById('x-coord').textContent = userX + 'px';
+		document.getElementById('y-coord').textContent = (userY + window.scrollY) + 'px';
+	}
+
+	
 
 });
