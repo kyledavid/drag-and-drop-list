@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var userY = 0; 
 	var permitMovement = false; 
 	var listItems = document.querySelectorAll('.list-item'); 
-	var listSpots = document.querySelectorAll('.snap-to-me'); 
+	var listSpots = document.querySelectorAll('.list-spot'); 
 
 	listItems.forEach(function(listItem) {	
 
@@ -23,65 +23,65 @@ document.addEventListener('DOMContentLoaded', function() {
 		permitMovement = true;
 
 		listItem.classList.add('dragged');
+		listItem.classList.remove('in-list');
 
 		positionItemOnCursor(mouseEvent, listItem);
-
-		listItem.classList.remove('in-list');
 
 		listItem.addEventListener('mousemove', function(moveEvent) {
 
 			if (permitMovement) {
 				positionItemOnCursor(moveEvent, listItem);
 			}
+
 		});
 	}
 
-	// run on mouseup
-	function endDrag(event) {
-		// put box back to original z index
-		var selection = event.target;
-		selection.classList.remove('dragged');
-		// mouse is up so we should no longer allow movement
+	function trackUserMousePosition(mouseEvent) {
+		userX = mouseEvent.clientX;
+		userY = mouseEvent.clientY;
+	}
+
+
+	function endDrag(mouseUp) {
+
+		var listItem = mouseUp.target;
+
+		listItem.classList.remove('dragged');
+		listItem.setAttribute('style', 'top: unset; left: unset;');
+
 		permitMovement = false;
-		userX = event.clientX;
-		userY = event.clientY;
-		// check if coordinates are within range 
+		trackUserMousePosition(mouseUp);
+		checkWherePositionedOnList(listItem);
+	}
+
+	function checkWherePositionedOnList(listItem) {
+		
 		if (userX >= 482 && userX <= 1036 && userY >= 62 && userY <= 181) {
-			// unset positioning
-			selection.setAttribute('style', 'top: unset; left: unset;');
-			// stylu it for sitting in list
-			selection.classList.add('in-list');
-			// append it to the appropriate spot
-			listSpots[0].appendChild(selection);
+
+			listItem.classList.add('in-list');
+			listSpots[0].appendChild(listItem);
+
 		} else if(userX > 482 && userX < 1036 && userY >= 182 && userY <= 282){
-			// unset positioning
-			selection.setAttribute('style', 'top: unset; left: unset;');
-			// stylu it for sitting in list
-			selection.classList.add('in-list');
-			// append it to the appropriate spot
-			listSpots[1].appendChild(selection);
+
+			listItem.classList.add('in-list');
+			listSpots[1].appendChild(listItem);
+
 		}
 		else if(userX >= 482 && userX <= 1036 && userY >= 283 && userY <= 383){
-			// unset positioning
-			selection.setAttribute('style', 'top: unset; left: unset;');
-			// stylu it for sitting in list
-			selection.classList.add('in-list');
-			// append it to the appropriate spot
-			listSpots[2].appendChild(selection);
+
+			listItem.classList.add('in-list');
+			listSpots[2].appendChild(listItem);
+
 		}
 		else if(userX >= 482 && userX <= 1036 && userY >= 384 && userY <= 505){
-			// unset positioning
-			selection.setAttribute('style', 'top: unset; left: unset;');
-			// stylu it for sitting in list
-			selection.classList.add('in-list');
-			// append it to the appropriate spot
-			listSpots[3].appendChild(selection);
+
+			listItem.classList.add('in-list');
+			listSpots[3].appendChild(listItem);
+
 		}
 		else {
-			// unset positioning
-			selection.setAttribute('style', 'top: unset; left: unset;');	
-			// put item back
-			putItemBack(selection);
+			
+			putItemBack(listItem);
 		}
 	}
 
