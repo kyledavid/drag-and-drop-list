@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var userY = 0; 
 	var permitMovement = false; 
 	var listItems = document.querySelectorAll('.list-item'); 
+	var listItemsArray = [null, null, null, null]
 	var listSpots = document.querySelectorAll('.list-spot'); 
 	// the dimensional boundaries of our list
 	var lSDims = {
@@ -36,6 +37,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	});
 
+	function cleanItemFromList(listItem) {
+		listItemsArray.forEach(function (existingItem, i) {
+			if (listItem === existingItem) {
+				listItemsArray[i] = null;
+			}
+		});
+	}
+
+	function renderList() {
+		listItemsArray.forEach(function (listItem, i) {
+			if (listItem) {
+				listItem.classList.add('in-list');
+				listItem.classList.remove('dragged');
+
+				listSpots[i].appendChild(listItem);
+			}
+			
+		});
+	}
+
+	function trimItemsArray() {
+		if (listItemsArray[4]) {
+			console.log(listItemsArray[4]);
+			putItemBack(listItemsArray[4]);
+		}
+
+		listItemsArray.splice(4);
+	}
+
 	function initDrag(mouseEvent) {
 
 		var listItem = mouseEvent.target; 
@@ -63,42 +93,54 @@ document.addEventListener('DOMContentLoaded', function() {
 		checkWherePositionedOnList(listItem);
 	}
 
+	function addItemForRendering(listItem, index) {
+		if (listItemsArray[index]) {
+			listItemsArray.splice(index, 0, listItem);
+			trimItemsArray();
+		} else {
+			listItemsArray[index] = listItem;
+		}
+	}
+
 	function checkWherePositionedOnList(listItem) {
 
 		var pageY = (userY + window.scrollY);
 
+		cleanItemFromList(listItem);
+
 		if (userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.first.top && pageY <= lSDims.first.bottom) {
 
-			listItem.classList.add('in-list');
-			listSpots[0].appendChild(listItem);
+			addItemForRendering(listItem, 0);
 
 		} else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.second.top && pageY <= lSDims.second.bottom) {
 
-			listItem.classList.add('in-list');
-			listSpots[1].appendChild(listItem);
+			addItemForRendering(listItem, 1);
 
 		}
 		else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.third.top && pageY <= lSDims.third.bottom) {
 
-			listItem.classList.add('in-list');
-			listSpots[2].appendChild(listItem);
+			addItemForRendering(listItem, 2);
 
 		}
 		else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.fourth.top && pageY <= lSDims.fourth.bottom) {
 
-			listItem.classList.add('in-list');
-			listSpots[3].appendChild(listItem);
+			addItemForRendering(listItem, 3);
 
 		}
 		else {
 
 			putItemBack(listItem);
 		}
+
+
+		console.log(listItemsArray);
+		renderList();
 	}
 
 	function putItemBack(listItem) {
 
 		var unorderedSpots = document.querySelectorAll('.holster');
+		listItem.classList.remove('in-list');
 
 		for (var i = 0; i < unorderedSpots.length; i++) {
 			var currentSpot = unorderedSpots[i];

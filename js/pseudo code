@@ -7,3 +7,19 @@ On release, stop tracking
 STEP 2
 
 If mouse is released within range of x and y coordinates, snap it to the center of box
+
+STEP 3
+
+Fill list with elements from an array, rather than manually dropping them in
+
+STEP 4
+
+Add the elements to the array when they are positioned over the list spot and mouse is released. If they are released over the third list spot add them to the 3rd index of the array
+
+STEP 5
+
+Re Render the list any time the array is updated
+
+STEP 6
+
+If there is an existing list item in the spot you attempt to drop the new list item, bump all subsequent list items down in the array. If the array has a 5th item, remove it from the array.
