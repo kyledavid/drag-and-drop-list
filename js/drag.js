@@ -106,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	function trimEmptyFromIndex(index) {
 		for(index; index < listItemsArray.length; index++) {
 			if(!listItemsArray[index]) {
-				console.log('i ran');
 				listItemsArray.splice(index, 1);
 				break;
 			}
@@ -144,8 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			putItemBack(listItem);
 		}
 
-
-		console.log(listItemsArray);
 		renderList();
 	}
 
