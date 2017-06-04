@@ -11,22 +11,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	// the pixel boundaries of our list spots.
 	var lSDims = {
 			first: {
-				top: 62,
-				bottom: 181,
+				top: 98,
+				bottom: 217,
 				left: 482,
 				right: 1036,
 			}, 
 			second: {
-				top: 182,
-				bottom: 282,
+				top: 218,
+				bottom: 318,
 			}, 
 			third: {
-				top: 283,
-				bottom: 383,
+				top: 319,
+				bottom: 419,
 			},
 			fourth: {
-				top: 384,
-				bottom: 505,
+				top: 420,
+				bottom: 540,
 			},
 	}
 
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function addItemForRendering(listItem, index) {
 		var slotAbove = index-1;
-		if (listItemsArray[index] && !listItemsArray[slotAbove]){
+		if (listItemsArray[index] && !listItemsArray[slotAbove] && index !== 0){
 			listItemsArray[slotAbove] = listItemsArray[index];
 			listItemsArray[index] = listItem;
 		} else if (listItemsArray[index]) {
