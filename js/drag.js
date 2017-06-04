@@ -12,29 +12,7 @@
 
 	document.addEventListener('DOMContentLoaded', function() {
 
-		
 		var listSpots = document.querySelectorAll('.list-spot'); 
-		// the pixel boundaries of our list spots.
-		var lSDims = {
-				first: {
-					top: 98,
-					bottom: 217,
-					left: 482,
-					right: 1036,
-				}, 
-				second: {
-					top: 218,
-					bottom: 318,
-				}, 
-				third: {
-					top: 319,
-					bottom: 419,
-				},
-				fourth: {
-					top: 420,
-					bottom: 540,
-				},
-		}
 
 		listItems.forEach(function(listItem) {	
 
@@ -67,42 +45,10 @@
 
 			permitMovement = false;
 			movementMethods.trackUserMousePosition(mouseUp);
-			checkWherePositionedOnList(listItem);
-		}
-
-		function checkWherePositionedOnList(listItem) {
-
-			var pageY = (userY + window.scrollY);
-
-			listItemsArray = virtualListEditing.cleanItemFromList(listItem);
-
-			if (userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.first.top && pageY <= lSDims.first.bottom) {
-
-				listItemsArray = virtualListEditing.addItemForRendering(listItem, 0);
-
-			} else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.second.top && pageY <= lSDims.second.bottom) {
-
-				listItemsArray = virtualListEditing.addItemForRendering(listItem, 1);
-
-			}
-			else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.third.top && pageY <= lSDims.third.bottom) {
-
-				listItemsArray = virtualListEditing.addItemForRendering(listItem, 2);
-
-			}
-			else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.fourth.top && pageY <= lSDims.fourth.bottom) {
-
-				listItemsArray = virtualListEditing.addItemForRendering(listItem, 3);
-
-			}
-			else {
-
-				virtualListEditing.putItemBack(listItem);
-			}
-
+			listItemsArray = virtualListEditing.checkWherePositionedOnList(listItem);
 			renderList();
 		}
-		
+
 
 		function renderList() {
 			listItemsArray.forEach(function (listItem, i) {
@@ -116,12 +62,70 @@
 			});
 		}
 		
-
-		
-		
 	});
 
 	var virtualListEditing = (function (listItemsArray) {
+
+		// the pixel boundaries of our list spots.
+		var lSDims = {
+				first: {
+					top: 98,
+					bottom: 217,
+					left: 482,
+					right: 1036,
+				}, 
+				second: {
+					top: 218,
+					bottom: 318,
+				}, 
+				third: {
+					top: 319,
+					bottom: 419,
+				},
+				fourth: {
+					top: 420,
+					bottom: 540,
+				},
+		}
+
+		function checkWherePositionedOnList(listItem) {
+
+			var pageY = (userY + window.scrollY);
+			var listSpot;
+
+			listItemsArray = cleanItemFromList(listItem);
+
+			if (userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.first.top && pageY <= lSDims.first.bottom) {
+
+				listSpot = 0;
+				listItemsArray = virtualListEditing.addItemForRendering(listItem, listSpot);
+
+			} else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.second.top && pageY <= lSDims.second.bottom) {
+
+				listSpot = 1;
+				listItemsArray = virtualListEditing.addItemForRendering(listItem, listSpot);
+
+			}
+			else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.third.top && pageY <= lSDims.third.bottom) {
+
+				listSpot = 2;
+				listItemsArray = virtualListEditing.addItemForRendering(listItem, listSpot);
+
+			}
+			else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.fourth.top && pageY <= lSDims.fourth.bottom) {
+
+				listSpot = 3;
+				listItemsArray = virtualListEditing.addItemForRendering(listItem, listSpot);
+
+			}
+			else {
+
+				putItemBack(listItem);
+			}
+
+			return listItemsArray;
+
+		}
 
 		function putItemBack(listItem) {
 
@@ -191,7 +195,7 @@
 			cleanItemFromList: cleanItemFromList,
 			addItemForRendering: addItemForRendering,
 			putItemBack: putItemBack,
-
+			checkWherePositionedOnList: checkWherePositionedOnList,
 
 		}
 	})(listItemsArray);
@@ -237,6 +241,7 @@
 			displayMouseCoordinates: displayMouseCoordinates,
 			addMovementListener: addMovementListener,
 			positionItemOnCursor: positionItemOnCursor,
+
 		}
 	})();
 
