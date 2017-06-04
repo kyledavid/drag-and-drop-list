@@ -1,10 +1,55 @@
 "use strict"
 
+var userX = 0; 
+var userY = 0;
+var permitMovement = false;
+
+var movementMethods = (function () {
+
+	function trackUserMousePosition(mouseEvent) {
+		userX = mouseEvent.clientX;
+		userY = mouseEvent.clientY;
+	}
+
+	function displayMouseCoordinates() {
+		document.getElementById('x-coord').textContent = userX + 'px';
+		document.getElementById('y-coord').textContent = (userY + window.scrollY) + 'px';
+	}
+
+	function addMovementListener(listItem) {
+
+		listItem.addEventListener( 'mousemove', function(moveEvent) {
+			if (permitMovement) {
+				displayMouseCoordinates();
+				positionItemOnCursor(moveEvent, listItem);
+			}
+		} );
+	}
+
+	function positionItemOnCursor(mouseEvent, listItem) {
+
+		var offsetX = listItem.offsetWidth / 2;
+		var offsetY = listItem.offsetHeight / 2;
+
+		trackUserMousePosition(mouseEvent);
+
+		if (window.scrollY) {offsetY -= window.scrollY;}
+
+		var positionStyles = 'top: ' + (userY - offsetY) + "px; left: " + (userX - offsetX) + "px;";
+
+		listItem.setAttribute('style', positionStyles);
+	}
+
+	return {
+		trackUserMousePosition: trackUserMousePosition,
+		displayMouseCoordinates: displayMouseCoordinates,
+		addMovementListener: addMovementListener,
+		positionItemOnCursor: positionItemOnCursor,
+	}
+})();
+
 document.addEventListener('DOMContentLoaded', function() {
 
-	var userX = 0; 
-	var userY = 0; 
-	var permitMovement = false; 
 	var listItems = document.querySelectorAll('.list-item'); 
 	var listItemsArray = [null, null, null, null]
 	var listSpots = document.querySelectorAll('.list-spot'); 
@@ -46,10 +91,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		listItem.classList.add('dragged');
 		listItem.classList.remove('in-list');
 
-		positionItemOnCursor(mouseEvent, listItem);
-		displayMouseCoordinates();
+		movementMethods.positionItemOnCursor(mouseEvent, listItem);
+		movementMethods.displayMouseCoordinates();
 
-		addMovementListener(listItem);		
+		movementMethods.addMovementListener(listItem);		
 	}
 
 	function endDrag(mouseUp) {
@@ -60,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		listItem.setAttribute('style', 'top: unset; left: unset;');
 
 		permitMovement = false;
-		trackUserMousePosition(mouseUp);
+		movementMethods.trackUserMousePosition(mouseUp);
 		checkWherePositionedOnList(listItem);
 	}
 
@@ -166,38 +211,5 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		}
 	}
-
-	function positionItemOnCursor(mouseEvent, listItem) {
-
-		var offsetX = listItem.offsetWidth / 2;
-		var offsetY = listItem.offsetHeight / 2;
-
-		trackUserMousePosition(mouseEvent);
-
-		if (window.scrollY) {offsetY -= window.scrollY;}
-
-		var positionStyles = 'top: ' + (userY - offsetY) + "px; left: " + (userX - offsetX) + "px;";
-
-		listItem.setAttribute('style', positionStyles);
-	}
-
-	function addMovementListener(listItem) {
-
-		listItem.addEventListener( 'mousemove', function(moveEvent) {
-			if (permitMovement) {
-				displayMouseCoordinates();
-				positionItemOnCursor(moveEvent, listItem);
-			}
-		} );
-	}
-
-	function trackUserMousePosition(mouseEvent) {
-		userX = mouseEvent.clientX;
-		userY = mouseEvent.clientY;
-	}
-
-	function displayMouseCoordinates() {
-		document.getElementById('x-coord').textContent = userX + 'px';
-		document.getElementById('y-coord').textContent = (userY + window.scrollY) + 'px';
-	}
+	
 });

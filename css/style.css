@@ -81,6 +81,12 @@
 .list-wrapper {
 }
 
+.clearfix:after {
+	display: block;
+	content: ' ';
+	clear: both;
+}
+
 main {
 	min-height: 150vh;
 	padding-top: 2em;
