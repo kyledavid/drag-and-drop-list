@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var listItems = document.querySelectorAll('.list-item'); 
 	var listItemsArray = [null, null, null, null]
 	var listSpots = document.querySelectorAll('.list-spot'); 
-	// the dimensional boundaries of our list
+	// the pixel boundaries of our list spots.
 	var lSDims = {
 			first: {
 				top: 62,
@@ -37,35 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	});
 
-	function cleanItemFromList(listItem) {
-		listItemsArray.forEach(function (existingItem, i) {
-			if (listItem === existingItem) {
-				listItemsArray[i] = null;
-			}
-		});
-	}
-
-	function renderList() {
-		listItemsArray.forEach(function (listItem, i) {
-			if (listItem) {
-				listItem.classList.add('in-list');
-				listItem.classList.remove('dragged');
-
-				listSpots[i].appendChild(listItem);
-			}
-			
-		});
-	}
-
-	function trimItemsArray() {
-		if (listItemsArray[4]) {
-			console.log(listItemsArray[4]);
-			putItemBack(listItemsArray[4]);
-		}
-
-		listItemsArray.splice(4);
-	}
-
 	function initDrag(mouseEvent) {
 
 		var listItem = mouseEvent.target; 
@@ -91,26 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		permitMovement = false;
 		trackUserMousePosition(mouseUp);
 		checkWherePositionedOnList(listItem);
-	}
-
-	function addItemForRendering(listItem, index) {
-		if (listItemsArray[index]) {
-			listItemsArray.splice(index, 0, listItem);
-			trimEmptyFromIndex(index);
-			trimItemsArray();
-		} else {
-			listItemsArray[index] = listItem;
-		}
-	}
-
-	function trimEmptyFromIndex(index) {
-		for(index; index < listItemsArray.length; index++) {
-			if(!listItemsArray[index]) {
-				listItemsArray.splice(index, 1);
-				break;
-			}
-		}
-		console.log(listItemsArray);
 	}
 
 	function checkWherePositionedOnList(listItem) {
@@ -144,6 +95,59 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 		renderList();
+	}
+
+	function addItemForRendering(listItem, index) {
+		var slotAbove = index-1;
+		if (listItemsArray[index] && !listItemsArray[slotAbove]){
+			listItemsArray[slotAbove] = listItemsArray[index];
+			listItemsArray[index] = listItem;
+		} else if (listItemsArray[index]) {
+			listItemsArray.splice(index, 0, listItem);
+			trimEmptyFromIndex(index);
+			trimItemsArray();
+		} else {
+			listItemsArray[index] = listItem;
+		}
+	}
+
+	function cleanItemFromList(listItem) {
+		listItemsArray.forEach(function (existingItem, i) {
+			if (listItem === existingItem) {
+				listItemsArray[i] = null;
+			}
+		});
+	}
+
+	function renderList() {
+		listItemsArray.forEach(function (listItem, i) {
+			if (listItem) {
+				listItem.classList.add('in-list');
+				listItem.classList.remove('dragged');
+
+				listSpots[i].appendChild(listItem);
+			}
+			
+		});
+	}
+
+	function trimEmptyFromIndex(index) {
+		for(index; index < listItemsArray.length; index++) {
+			if(!listItemsArray[index]) {
+				listItemsArray.splice(index, 1);
+				break;
+			}
+		}
+		console.log(listItemsArray);
+	}
+
+	function trimItemsArray() {
+		if (listItemsArray[4]) {
+			console.log(listItemsArray[4]);
+			putItemBack(listItemsArray[4]);
+		}
+
+		listItemsArray.splice(4);
 	}
 
 	function putItemBack(listItem) {
