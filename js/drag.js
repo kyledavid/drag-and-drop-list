@@ -34,6 +34,7 @@
 			listItem.classList.remove('in-list');
 
 			movementMethods.positionItemOnCursor(mouseEvent, listItem);
+			movementMethods.removeFromUnrankedPool(listItem);
 			movementMethods.displayMouseCoordinates();
 
 			movementMethods.addMovementListener(listItem);		
@@ -264,6 +265,18 @@
 			} );
 		}
 
+		/* Put moving items in "limbo", as opposed to remaining in the unordered pool.
+			The listItemsArray is updated before the list is rendered, which also means 
+			any item bumped off the LIA will be bumped before the selected item is appended 
+			ranked list. Therefore, we must put the selected item in limbo so its not still occupying
+			an unranked spot when the last element is bumped off the list. */
+
+		function removeFromUnrankedPool(listItem) {
+
+			var limbo = document.getElementById('limbo');
+			limbo.appendChild(listItem);
+		}
+
 		function positionItemOnCursor(mouseEvent, listItem) {
 
 			var offsetX = listItem.offsetWidth / 2;
@@ -283,6 +296,7 @@
 			displayMouseCoordinates: displayMouseCoordinates,
 			addMovementListener: addMovementListener,
 			positionItemOnCursor: positionItemOnCursor,
+			removeFromUnrankedPool: removeFromUnrankedPool,
 
 		}
 	})();
