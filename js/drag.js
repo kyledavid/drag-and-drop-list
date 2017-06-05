@@ -8,7 +8,7 @@
 	var userY = 0;
 	var permitMovement = false;
 	var listItems = document.querySelectorAll('.list-item'); 
-	var listItemsArray = [null, null, null, null]
+	var listItemsArray = [null, null, null, null, null]
 
 	document.addEventListener('DOMContentLoaded', function() {
 
@@ -20,6 +20,9 @@
 			listItem.addEventListener('mouseup', endDrag); 
 
 		});
+
+		/* Fires when a list item is clicked. Prepares element 
+			to be dragged and positions it over cursor */
 
 		function initDrag(mouseEvent) {
 
@@ -36,6 +39,9 @@
 			movementMethods.addMovementListener(listItem);		
 		}
 
+		/* Runs when the mouse is unclicked. Then, places list item in spot
+			on listItemsArray or returns it to the pool of unranked items */
+
 		function endDrag(mouseUp) {
 
 			var listItem = mouseUp.target;
@@ -49,6 +55,8 @@
 			renderList();
 		}
 
+		/* Renders the list depending on the order of the elements in the
+			listItemsArray */
 
 		function renderList() {
 			listItemsArray.forEach(function (listItem, i) {
@@ -64,29 +72,39 @@
 		
 	});
 
+	/* Module  with methods for updating an element's position in the listItemsArray.
+		Methods will return a new array to update the listItemsArray. */
+
 	var virtualListEditing = (function (listItemsArray) {
 
 		// the pixel boundaries of our list spots.
 		var lSDims = {
 				first: {
-					top: 98,
-					bottom: 217,
+					top: 108,
+					bottom: 227,
 					left: 482,
 					right: 1036,
 				}, 
 				second: {
-					top: 218,
-					bottom: 318,
+					top: 228,
+					bottom: 328,
 				}, 
 				third: {
-					top: 319,
-					bottom: 419,
+					top: 329,
+					bottom: 429,
 				},
 				fourth: {
-					top: 420,
-					bottom: 540,
+					top: 430,
+					bottom: 530,
+				},
+				fifth: {
+					top: 531,
+					bottom: 650,
 				},
 		}
+
+		/* Check the current position of the cursor and compare it with the coordinates of
+			the list boxes. Insert the current list item into the LIA depending on its position */
 
 		function checkWherePositionedOnList(listItem) {
 
@@ -117,6 +135,11 @@
 				listSpot = 3;
 				listItemsArray = virtualListEditing.addItemForRendering(listItem, listSpot);
 
+			} else if(userX >= lSDims.first.left && userX <= lSDims.first.right && pageY >= lSDims.fifth.top && pageY <= lSDims.fifth.bottom) {
+
+				listSpot = 4;
+				listItemsArray = virtualListEditing.addItemForRendering(listItem, listSpot);
+
 			}
 			else {
 
@@ -127,9 +150,13 @@
 
 		}
 
+		/* If item is not within the boundaries of a list spot, add it back
+			to the pool of unordered items */
+
 		function putItemBack(listItem) {
 
 			var unorderedSpots = document.querySelectorAll('.holster');
+
 			listItem.classList.remove('in-list');
 
 			for (var i = 0; i < unorderedSpots.length; i++) {
@@ -144,8 +171,13 @@
 			}
 		}
 
+		/* Item is within boundaries potential list spots, place it at the appropriate array
+			position. */
+
 		function addItemForRendering(listItem, index) {
+
 			var slotAbove = index-1;
+
 			if (listItemsArray[index] && !listItemsArray[slotAbove] && index !== 0){
 				listItemsArray[slotAbove] = listItemsArray[index];
 				listItemsArray[index] = listItem;
@@ -160,6 +192,11 @@
 			return listItemsArray;
 		}
 
+		/* If an empty spot exists after the index where the new item is added to the array,
+			delete it. This assists trimItemsArray, which trims the fifth item from the array.
+			trimEmptyFromIndex ensures a list item doesn't get trimmed when there is an empty space that can
+			be removed instead */
+
 		function trimEmptyFromIndex(index) {
 			for(index; index < listItemsArray.length; index++) {
 				if(!listItemsArray[index]) {
@@ -170,16 +207,20 @@
 			return listItemsArray;
 		}
 
+		/* Removes the fifth item from the LIA, as we only have 4 spots for rendering items */
+
 		function trimItemsArray() {
-			if (listItemsArray[4]) {
-				console.log(listItemsArray[4]);
-				putItemBack(listItemsArray[4]);
+			if (listItemsArray[5]) {
+				putItemBack(listItemsArray[5]);
 			}
 
-			listItemsArray.splice(4);
+			listItemsArray.splice(5);
 
 			return listItemsArray;
 		}
+
+		/* Remove currently selected list item from LIA before adding it back in. This is to
+			eliminate potential conflicts if it is added back to the same list spot */
 
 		function cleanItemFromList(listItem) {
 			listItemsArray.forEach(function (existingItem, i) {
@@ -200,6 +241,8 @@
 		}
 	})(listItemsArray);
 
+	/* Methods relating to moving the currently selected list item across the screen */
+
 	var movementMethods = (function () {
 
 		function trackUserMousePosition(mouseEvent) {
@@ -213,7 +256,6 @@
 		}
 
 		function addMovementListener(listItem) {
-
 			listItem.addEventListener( 'mousemove', function(moveEvent) {
 				if (permitMovement) {
 					displayMouseCoordinates();
