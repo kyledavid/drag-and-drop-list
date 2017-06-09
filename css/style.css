@@ -161,6 +161,7 @@
 	clear: both;
 }
 
+
 main {
 	min-height: 150vh;
 	padding-top: 2em;
@@ -169,4 +170,5 @@ main {
 
 body {
 	background-color: #eaeff2;
+	overflow-x: hidden;
 }
