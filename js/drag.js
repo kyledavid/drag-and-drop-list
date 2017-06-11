@@ -1,5 +1,3 @@
-
-
 (function() {
 
 	"use strict"
@@ -26,7 +24,7 @@
 
 		function initDrag(mouseEvent) {
 
-			var listItem = mouseEvent.target.parentNode; 
+			var listItem = this; 
 
 			permitMovement = true;
 
@@ -45,7 +43,7 @@
 
 		function endDrag(mouseUp) {
 
-			var listItem = mouseUp.target.parentNode;
+			var listItem = this;
 
 			listItem.classList.remove('dragged');
 			listItem.setAttribute('style', 'top: unset; left: unset;');
